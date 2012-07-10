@@ -1,6 +1,6 @@
 # Gump
 
-A 3D automata that seems to do neat things
+A 3D automata that seems to do neat things.  Runs on [Processing](http://processing.org/).
 
 This was the first thing I ever programmed from the ground up that I feel is
 truly a composition of my own.  While the idea may be something I'm proud of, 
