@@ -9,13 +9,12 @@ with very little programming experience.
 
 ### On Public Abominations
 
-My lack of experience at the time shows, so I published this as an example of all kinds
-of bad practices:
+My lack of experience at the time shows, so I published this as an example of some bad practices:
 
 - Messy global variables
 - Very little or meaningless commenting
 - Unnecessary abstraction in places, not nearly enough in others.
 - Poor variable naming
 
-However, I do like the idea that underlies it.  The automata even exhibits some pretty interesting
+Additionally, I do like the idea that underlies it.  The automata exhibits some pretty interesting
 characteristics with some experimentation.
