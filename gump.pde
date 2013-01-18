@@ -3,7 +3,7 @@ PrintWriter output;
 import processing.opengl.*;
 
 // Size of (toroidal) cubic habitat
-int habitatSize = 64;
+int habitatSize = 28;
 
 // Seed generation mode.  Seeds are always planted centrally in the environment.
 //     1 for cube shape
@@ -11,10 +11,10 @@ int habitatSize = 64;
 int generateMode = 1;
 
 // Seed size as fraction of the environment
-float seedFraction = .4;
+float seedFraction = .5;
 
-// Probability that any cell within the seed will become live
-int seedProbability = 14;
+// Probability that any cell within the seed will become live (0 - 100)
+int seedProbability = 100;
 
 // Rendering mode.
 //     1 for 3D, with a mouse controlled camera: L/R rotation, U/D zoom
