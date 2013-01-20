@@ -13,8 +13,12 @@ My lack of experience at the time shows, so I published this as an example of so
 
 - Messy global variables
 - Very little or meaningless commenting
-- Unnecessary abstraction in places, not nearly enough in others.
+- Unnecessary abstraction in places, not enough in others.
 - Poor variable naming
 
-Additionally, I do like the idea that underlies it.  The automata exhibits some pretty interesting
+Additionally, I do like the idea that underlies it.  The automata ruleset exhibits some pretty interesting
 characteristics with some experimentation.
+
+#TODO cubic tendencies
+#TODO population graphs
+
