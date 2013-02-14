@@ -7,7 +7,10 @@
 // intention:  front is positive X direction
 //             right is positive Y direction
 //             top is positive Z direction
-struct Cell { bool *front, *back, *left, *right, *top, *bottom; };
+struct Cell
+{
+  bool *front, *back, *left, *right, *top, *bottom;
+};
 
 // connects the 3D array of cells by equivocating faces of cells with
 // with rectangular adjacency.  environment will not be toroidally connected.
@@ -39,10 +42,26 @@ void initRect(Cell ***env, bool *subst, const unsigned int x, \
   }
 }
 
+void xyPrint(Cell ***env)
+{
+}
+
+void xzPrint(Cell ***env)
+{
+
+}
+
+void yzPrint(Cell ***env)
+{
+
+}
+
 // "pretty" printer for an environment
 void pprint(Cell ***env)
 {
-  printf("shit goes here");
+ xyPrint(env);
+ xzPrint(env);
+ yzPrint(env);
 }
 
 // main function for conducting tests
