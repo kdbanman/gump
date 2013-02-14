@@ -31,6 +31,6 @@ My lack of experience at the time shows, so I published this as an example of so
 Additionally, I do like the idea that underlies it.  The automata ruleset exhibits some pretty interesting
 characteristics with some experimentation.
 
-#TODO cubic tendencies
-#TODO population graphs
+`#TODO cubic tendencies`
+`#TODO population graphs`
 
