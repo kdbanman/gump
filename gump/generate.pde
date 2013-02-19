@@ -1,13 +1,13 @@
 boolean[][][] generate(boolean[][][] habitatGen, float fraction, int probability, int mode) {
 
-  //generate the first and last indices of the seed
+  // generate the first and last indices of the seed
   float seedLength = habitatGen.length * fraction;
   print(seedLength);
   int seedStart = round( habitatGen.length / 2 - seedLength / 2 );
   int seedEnd =  round( habitatGen.length / 2 + seedLength / 2 );
 
   if (mode == 1) {
-    
+    // full cube of on cells
     for (int x = seedStart ; x < seedEnd ; x++) {
       for (int y = seedStart ; y < seedEnd ; y++) {
         for (int z = seedStart ; z < seedEnd ; z++) {
@@ -20,8 +20,8 @@ boolean[][][] generate(boolean[][][] habitatGen, float fraction, int probability
     }
   }
 
-  if (mode == 2) {
-
+  else if (mode == 2) {
+    // flat plane of on cells
     int z = round(habitatGen.length / 2);
 
     for (int x = seedStart ; x < seedEnd ; x++) {
@@ -33,11 +33,6 @@ boolean[][][] generate(boolean[][][] habitatGen, float fraction, int probability
       }
     }
   }
-  
-  if (mode == 3) {
-    
-    //empty cube
-    }
 
   return habitatGen;
 }

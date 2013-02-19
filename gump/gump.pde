@@ -2,8 +2,12 @@
 PrintWriter output;
 import processing.opengl.*;
 
+/*
+  GLOBAL CONFIG VARIABLES
+*/
+
 // Size of (toroidal) cubic habitat
-int habitatSize = 28;
+int habitatSize = 36;
 
 // Seed generation mode.  Seeds are always planted centrally in the environment.
 //     1 for cube shape
@@ -24,23 +28,24 @@ int seedProbability = 100;
 //        'Whiteness' of a cell intensifies the more often that cell is alive
 int renderMode = 1;
 
-// Every Nth frame is rendered.  For performance under GPU bottleneck
-int frameSkip = 1;
+/*
+  ENVIRONMENTAL AND STASTISTICAL VARIABLES
+*/
 
-// Only renders if true.  For stats collection rather than visualization
-boolean rendering = true;
-
-//global habitat arrays
+// habitat arrays
+//   at the beginning of each timestep, newHabitat is calculated from the (old) habitat
+//   at the end of each timest
 boolean[][][] habitat = new boolean[habitatSize][habitatSize][habitatSize];
 boolean[][][] newHabitat = new boolean[habitatSize][habitatSize][habitatSize];
 
-//list of all 3D cell coordinates allowed by the map restrictions (with only one odd of x,y,z) within habitat
+// list of all 3D cell coordinates allowed by the map restrictions (with only one odd of x,y,z) within habitat
 int coordList[][] = coordGenerate(habitat);
 
-//main generation counter
+// generation counter
 int generation;
 int aliveNow;
 int aliveLast;
+// cumulative counter for each cell
 int[][][] cellCount = new int[habitatSize][habitatSize][habitatSize];
 int maxCount;
 
@@ -51,7 +56,7 @@ void setup() {
 
   renderSet();
 
-  background(#000000);
+  background(#484340);
 
   habitat = generate(habitat, seedFraction, seedProbability, generateMode);
 }
@@ -68,20 +73,13 @@ void draw() {
 
   keyPressed();
 
-  if (generation % 1 == 0) {
+  mouseCamera(renderMode);
+  render(generation, renderMode);
 
-
-    if (rendering) {
-
-      mouseCamera(renderMode);
-      render(frameSkip, generation, renderMode);
-    }
-
-    String[] datapoint = new String[2];
-    datapoint[0] = str(generation);
-    datapoint[1] = str(aliveNow);
-    output.println( join(datapoint, "     ") );
-  }
+  String[] datapoint = new String[2];
+  datapoint[0] = str(generation);
+  datapoint[1] = str(aliveNow);
+  output.println( join(datapoint, "     ") );
 
   generation++;
   aliveLast = aliveNow;
@@ -93,14 +91,6 @@ void keyPressed() {
       output.flush();
       output.close();
       exit();
-    }
-  }
-  if (mousePressed) {
-    if (rendering == true) {
-      rendering = false;
-    }
-    else {
-      rendering = true;
     }
   }
 }
