@@ -1,6 +1,14 @@
 # Gump
 A 3D automata that seems to do neat things.
 
+Gump visualizes a particular example the computational concept called cellular
+automata. A cellular automaton is just a set of rules that describe how
+a system evolves. These systems are spatial lattices of cells that form
+self-modifying environments, as characterized by the rules. One of the
+simplest and most beautiful examples is also the earliest ever discovered,
+called Conway's Game of Life (often abbreviated as Life). Life was inspired by
+population dynamics of living organisms, and Gump was inpired by Life.
+
 
 ## Visualization
 
