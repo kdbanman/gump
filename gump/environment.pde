@@ -19,6 +19,8 @@ public static class Environment {
   //   when iterate() is called, newHabitat is calculated, then habitat is set equal to newHabitat
   public static boolean[][][] habitat;
   private static boolean[][][] newHabitat;
+  // size of 3D environment container
+  public static int dimSize;
   // array of all valid coordinates (since not all cells in the above 3D arrays are environmental)
   public static int coordList[][];
   // current population
@@ -38,6 +40,7 @@ public static class Environment {
     */
     this.habitat = new boolean[habSize][habSize][habSize];
     this.newHabitat = new boolean[habSize][habSize][habSize];
+    this.dimSize = habSize;
     this.coordList = coordGenerate(habSize);
     this.population = 0;
     this.generation = 0;

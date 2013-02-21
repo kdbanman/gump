@@ -1,7 +1,9 @@
 PrintWriter output;
 import processing.opengl.*;
 
-
+/************
+  GENERATION ZERO PARAMETERS
+************/
 
 // Seed generation mode.  Seeds are always planted centrally in the environment.
 //     1 for cube shape
@@ -14,6 +16,9 @@ float seedFraction = 0.4;
 // Probability that any cell within the seed will become live (0 - 100)
 int seedProbability = 100;
 
+/************
+  ENVIRONMENT DECLARATION
+************/
 
 // Size of (toroidal) cubic, 3D habitat container.
 //   for interface, guard from 1 to (N % 2 == 1 ? N : N - 1)
@@ -22,6 +27,9 @@ int habitatSize = 32;
 // Environment and renderer objects
 Environment environment;
 
+/************
+  CONTROL FLAGS AND PARAMETERS
+************/
 
 // Flag to indicate seed construction mode or iteration mode
 boolean constructing = true;
@@ -31,7 +39,7 @@ boolean renderEmpty = true;
 
 // Number of frames to render between environmental iterations (need to have frameCounter for this to work)
 // This is modified by division/multiplication by 2 to avoid negative values (WHY NO UNSIGNED INT, JAVA??) 
-int framesPerIter = 1;
+int framesPerIter = 64;
 int frameCounter = 0;
 
 
@@ -63,6 +71,7 @@ void keyPressed()
   if (constructing) {
     if (key == ENTER || key == RETURN) {
       constructing = false;
+      renderEmpty = false;
     } 
   } else {
     if (key == CODED) {
@@ -86,10 +95,14 @@ void draw() {
   // start in seed construction mode, transition to evolution mode when done
   if (!constructing) {
     mouseCamera(environment, renderEmpty);
+    
     if (frameCounter % framesPerIter == 0) {
       environment.iterate();
     }
+    frameCounter++;
+    
   } else {
+    // IMPORTANT:  constructionCamera's functionality depends upon the key system variable
     constructionCamera(environment);
   }
   
@@ -101,8 +114,6 @@ void draw() {
   datapoint[0] = str(environment.generation);
   datapoint[1] = str(environment.population);
   output.println( join(datapoint, "     ") );
-  
-  frameCounter++;
   
 }
 

@@ -11,6 +11,7 @@ void constructionCamera(Environment env) {
       - focused planes are the only ones rendered without transparency
       - up and down arrows control focus on particular planes.
     
+    IMPORTANT:  this function depends upon the system variable key
   */
   mouseCamera(env, true);
 }
