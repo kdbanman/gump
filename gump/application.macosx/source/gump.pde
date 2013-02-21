@@ -8,10 +8,10 @@ import processing.opengl.*;
 // Seed generation mode.  Seeds are always planted centrally in the environment.
 //     1 for cube shape
 //     2 for planar
-int generateMode = 2;
+int generateMode = 1;
 
 // Seed size as fraction of the environment
-float seedFraction = 0.5;
+float seedFraction = 0.4;
 
 // Probability that any cell within the seed will become live (0 - 100)
 int seedProbability = 100;
@@ -22,7 +22,7 @@ int seedProbability = 100;
 
 // Size of (toroidal) cubic, 3D habitat container.
 //   for interface, guard from 1 to (N % 2 == 1 ? N : N - 1)
-int habitatSize = 33;
+int habitatSize = 32;
 
 // Environment and renderer objects
 Environment environment;
@@ -39,7 +39,7 @@ boolean renderEmpty = true;
 
 // Number of frames to render between environmental iterations (need to have frameCounter for this to work)
 // This is modified by division/multiplication by 2 to avoid negative values (WHY NO UNSIGNED INT, JAVA??) 
-int framesPerIter = 32;
+int framesPerIter = 64;
 int frameCounter = 0;
 
 
@@ -72,7 +72,6 @@ void keyPressed()
     if (key == ENTER || key == RETURN) {
       constructing = false;
       renderEmpty = false;
-      hint(ENABLE_DEPTH_TEST);
     } 
   } else {
     if (key == CODED) {
@@ -81,6 +80,8 @@ void keyPressed()
       } else if (keyCode == DOWN) {
         framesPerIter *= 2;
       }
+    } else if (key == 'e' || key == 'E') {
+      renderEmpty = !renderEmpty;
     }
   }
 }
