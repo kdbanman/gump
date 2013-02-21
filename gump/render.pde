@@ -11,6 +11,8 @@ void render(Environment env) {
 
     if (env.habitat[x][y][z]) {
       axialPaint(x, y, z);
+    } else {
+      axialPaintTrans(x,y,z,20);
     }
   }
 }

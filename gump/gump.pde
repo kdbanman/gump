@@ -1,10 +1,6 @@
 PrintWriter output;
 import processing.opengl.*;
 
-/************************
-  GLOBAL CONFIG VARIABLES
-************************/
-
 // Size of (toroidal) cubic, 3D habitat container.
 //   for interface, guard from 1 to (N % 2 == 1 ? N : N - 1)
 int habitatSize = 14;
@@ -33,6 +29,22 @@ void setup() {
   size(800, 600, OPENGL);
 }
 
+
+void keyPressed() {
+  if (key == CODED) {
+    if (keyCode == UP) {
+      output.flush();
+      output.close();
+      exit();
+    } else if (keyCode == LEFT) {
+      hint(ENABLE_DEPTH_TEST);
+    } else if (keyCode == RIGHT) {
+      hint(DISABLE_DEPTH_TEST);
+    }
+  }
+}
+
+
 void draw() {
 
   environment.iterate();
@@ -49,14 +61,5 @@ void draw() {
   
 }
 
-void keyPressed() {
-  if (key == CODED) {
-    if (keyCode == UP) {
-      output.flush();
-      output.close();
-      exit();
-    }
-  }
-}
 
 
