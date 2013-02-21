@@ -1,4 +1,4 @@
-void render(Environment env) {
+void render(Environment env, boolean emptyCells) {
   /*
     looks through an environment's list of valid coordinates and renders the live cells
   */
@@ -11,7 +11,7 @@ void render(Environment env) {
 
     if (env.habitat[x][y][z]) {
       axialPaint(x, y, z);
-    } else {
+    } else if (emptyCells) {
       axialPaintTrans(x,y,z,20);
     }
   }

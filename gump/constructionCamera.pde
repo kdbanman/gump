@@ -1,4 +1,4 @@
-void constructSeed(Environment env) {
+void constructionCamera(Environment env) {
   /*
     gui for constructing seeds.  only one plane is in focus at a time, mouse releases on cells toggle them. 
     camera properties:
@@ -12,4 +12,5 @@ void constructSeed(Environment env) {
       - up and down arrows control focus on particular planes.
     
   */
+  mouseCamera(env, true);
 }
