@@ -7,7 +7,7 @@ import processing.opengl.*;
 ************************/
 
 // Size of (toroidal) cubic habitat
-int habitatSize = 24;
+int habitatSize = 32;
 
 // Seed generation mode.  Seeds are always planted centrally in the environment.
 //     1 for cube shape
@@ -42,6 +42,7 @@ boolean[][][] habitat = new boolean[habitatSize][habitatSize][habitatSize];
 boolean[][][] newHabitat = new boolean[habitatSize][habitatSize][habitatSize];
 
 // list of all 3D cell coordinates allowed by the map restrictions (with only one odd of x,y,z) within habitat
+// POST REFACTOR:  THIS IS PASSED THE INTEGER SIZE, not the actual habitat
 int coordList[][] = coordGenerate(habitat);
 
 // generation counter
