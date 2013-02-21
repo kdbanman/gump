@@ -29,9 +29,16 @@ boolean constructing = true;
 // Flag to indicate whether or not empty cells are to be rendered
 boolean renderEmpty = true;
 
+// Number of frames to render between environmental iterations (need to have frameCounter for this to work)
+// This is modified by division/multiplication by 2 to avoid negative values (WHY NO UNSIGNED INT, JAVA??) 
+int framesPerIter = 1;
+int frameCounter = 0;
+
 
 void setup() {
-
+  /*
+    Processing's  initialization function
+  */
   output = createWriter("../statData/population" + String.valueOf((int)(habitatSize * seedFraction)) + ".txt");
 
   environment = new Environment(habitatSize);
@@ -44,7 +51,10 @@ void setup() {
 
 void keyPressed()
 {
-  
+  /*
+    Processing's keyboard event handler.
+    NOT relocated to a separate file, since key program logic is encoded here
+  */
   if (key == 'q' || key == 'Q') {
       output.flush();
       output.close();
@@ -55,7 +65,13 @@ void keyPressed()
       constructing = false;
     } 
   } else {
-    if (key == 'e' || key == 'E') {
+    if (key == CODED) {
+      if (keyCode == UP) {
+        framesPerIter = max(1, framesPerIter / 2);
+      } else if (keyCode == DOWN) {
+        framesPerIter *= 2;
+      }
+    } else if (key == 'e' || key == 'E') {
       renderEmpty = !renderEmpty;
     }
   }
@@ -63,10 +79,16 @@ void keyPressed()
 
 
 void draw() {
-
+  /*
+    Processing's main program loop
+  */
+  
+  // start in seed construction mode, transition to evolution mode when done
   if (!constructing) {
     mouseCamera(environment, renderEmpty);
-    environment.iterate();
+    if (frameCounter % framesPerIter == 0) {
+      environment.iterate();
+    }
   } else {
     constructionCamera(environment);
   }
@@ -79,6 +101,8 @@ void draw() {
   datapoint[0] = str(environment.generation);
   datapoint[1] = str(environment.population);
   output.println( join(datapoint, "     ") );
+  
+  frameCounter++;
   
 }
 
