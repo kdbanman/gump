@@ -1,4 +1,4 @@
-void render(int iterations, int mode) {
+void render(int mode) {
 
   background(#484340);
 

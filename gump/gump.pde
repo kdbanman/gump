@@ -6,7 +6,8 @@ import processing.opengl.*;
   GLOBAL CONFIG VARIABLES
 ************************/
 
-// Size of (toroidal) cubic habitat
+// Size of (toroidal) cubic, 3D habitat container.
+//   for interface, guard from 1 to (N % 2 == 1 ? N : N - 1)
 int habitatSize = 32;
 
 // Seed generation mode.  Seeds are always planted centrally in the environment.
@@ -43,7 +44,7 @@ boolean[][][] newHabitat = new boolean[habitatSize][habitatSize][habitatSize];
 
 // list of all 3D cell coordinates allowed by the map restrictions (with only one odd of x,y,z) within habitat
 // POST REFACTOR:  THIS IS PASSED THE INTEGER SIZE, not the actual habitat
-int coordList[][] = coordGenerate(habitat);
+int coordList[][] = coordGenerate(habitat); 
 
 // generation counter
 int generation;
@@ -75,7 +76,7 @@ void draw() {
   keyPressed();
 
   mouseCamera(renderMode);
-  render(generation, renderMode);
+  render(renderMode);
 
   String[] datapoint = new String[2];
   datapoint[0] = str(generation);
