@@ -1,7 +1,7 @@
 int[][] coordGenerate(boolean[][][] habitatCoord) {
 
   int count = 0;
-  int listSize = ceil(habitatCoord.length * habitatCoord.length * habitatCoord.length / 0.375);
+  int listSize = habitatCoord.length * habitatCoord.length * habitatCoord.length / 2;
   int preCoordinate[][] = new int[listSize][3];
 
   for (int x = 0 ; x < habitatCoord.length ; x++) {

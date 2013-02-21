@@ -1,4 +1,4 @@
-boolean[][][] iterate(boolean[][][] habitatIter) {
+boolean[][][] iterate(boolean[][][] habitatIter, int population) {
 
   boolean[][][] iterated = new boolean[habitatIter.length][habitatIter.length][habitatIter.length];
 
@@ -74,7 +74,7 @@ boolean[][][] iterate(boolean[][][] habitatIter) {
 
       iterated[x][y][z] = true;
       
-      aliveNow++;
+      population++;
       
       cellCount[x][y][z]++;
       maxCount = max(maxCount, cellCount[x][y][z]);
@@ -84,7 +84,7 @@ boolean[][][] iterate(boolean[][][] habitatIter) {
 
         iterated[x][y][z] = true;
         
-        aliveNow++;
+        population++;
         
         cellCount[x][y][z]++;
         maxCount = max(maxCount, cellCount[x][y][z]);

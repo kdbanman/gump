@@ -2,12 +2,12 @@
 PrintWriter output;
 import processing.opengl.*;
 
-/*
+/************************
   GLOBAL CONFIG VARIABLES
-*/
+************************/
 
 // Size of (toroidal) cubic habitat
-int habitatSize = 36;
+int habitatSize = 24;
 
 // Seed generation mode.  Seeds are always planted centrally in the environment.
 //     1 for cube shape
@@ -15,10 +15,10 @@ int habitatSize = 36;
 int generateMode = 1;
 
 // Seed size as fraction of the environment
-float seedFraction = .5;
+float seedFraction = 0.3;
 
 // Probability that any cell within the seed will become live (0 - 100)
-int seedProbability = 100;
+int seedProbability = 50;
 
 // Rendering mode.
 //     1 for 3D, with a mouse controlled camera: L/R rotation, U/D zoom
@@ -28,13 +28,16 @@ int seedProbability = 100;
 //        'Whiteness' of a cell intensifies the more often that cell is alive
 int renderMode = 1;
 
-/*
+/*****************************************
   ENVIRONMENTAL AND STASTISTICAL VARIABLES
-*/
+    while these are global variables, they will be passed as parameters to each function to
+    improve clarity.
+*****************************************/
 
 // habitat arrays
 //   at the beginning of each timestep, newHabitat is calculated from the (old) habitat
 //   at the end of each timest
+Environment environment = new Environment(habitatSize);
 boolean[][][] habitat = new boolean[habitatSize][habitatSize][habitatSize];
 boolean[][][] newHabitat = new boolean[habitatSize][habitatSize][habitatSize];
 
@@ -43,16 +46,15 @@ int coordList[][] = coordGenerate(habitat);
 
 // generation counter
 int generation;
-int aliveNow;
-int aliveLast;
+// population counter
+int population;
 // cumulative counter for each cell
 int[][][] cellCount = new int[habitatSize][habitatSize][habitatSize];
 int maxCount;
 
 void setup() {
 
-  output = createWriter("runData24by24allON.dat");
-
+  output = createWriter("../statData/population" + String.valueOf((int)(habitatSize * seedFraction)) + ".txt");
 
   renderSet();
 
@@ -63,11 +65,9 @@ void setup() {
 
 void draw() {
 
-  aliveNow = 0;
+  population = 0;
 
-  newHabitat = iterate(habitat);
-
-
+  newHabitat = iterate(habitat, population);
 
   habitat = newHabitat;
 
@@ -78,11 +78,10 @@ void draw() {
 
   String[] datapoint = new String[2];
   datapoint[0] = str(generation);
-  datapoint[1] = str(aliveNow);
+  datapoint[1] = str(population);
   output.println( join(datapoint, "     ") );
 
   generation++;
-  aliveLast = aliveNow;
 }
 
 void keyPressed() {
@@ -94,4 +93,5 @@ void keyPressed() {
     }
   }
 }
+
 
