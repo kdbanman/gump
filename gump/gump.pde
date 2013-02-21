@@ -81,6 +81,7 @@ void draw() {
   output.println( join(datapoint, "     ") );
 
   generation++;
+  
 }
 
 void keyPressed() {
