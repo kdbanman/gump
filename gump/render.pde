@@ -1,40 +1,16 @@
-void render(int mode) {
-
+void render(Environment env) {
+  /*
+    looks through an environment's list of valid coordinates and renders the live cells
+  */
   background(#484340);
 
-  if (mode == 1) {
-    for (int i = 0 ; i < coordList.length ; i++) {
+  for (int i = 0 ; i < env.coordList.length ; i++) {
+    int x = env.coordList[i][0];
+    int y = env.coordList[i][1];
+    int z = env.coordList[i][2];
 
-      int x = coordList[i][0];
-      int y = coordList[i][1];
-      int z = coordList[i][2];
-
-      if (habitat[x][y][z]) {
-        axialPaint(x, y, z);
-      } 
+    if (env.habitat[x][y][z]) {
+      axialPaint(x, y, z);
     }
-  } 
-  
-  else if (mode == 2) {
- 
-    int z = round(habitat.length / 2);
-
-    for (int x = 0 ; x < habitat.length ; x++) {
-      for (int y = 0 ; y < habitat.length ; y++) { 
-
-        if (habitat[x][y][z]) {
-
-          fill(#FFC400);
-          rect(5*x, 5*y, 5, 5);
-        } 
-        else {
-
-          int shade = round(cellCount[x][y][z] * 256 / maxCount);
-          fill(shade);
-          rect(5*x, 5*y, 3, 3);
-        }
-      }
-    }
-  }    
+  }
 }
-

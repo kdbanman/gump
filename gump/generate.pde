@@ -11,7 +11,7 @@ boolean[][][] generate(boolean[][][] habitatGen, float fraction, int probability
     for (int x = seedStart ; x < seedEnd ; x++) {
       for (int y = seedStart ; y < seedEnd ; y++) {
         for (int z = seedStart ; z < seedEnd ; z++) {
-          if (isCoord(x, y, z)  &&  random(100) >= (100 - probability)) {
+          if ((x%2 + y%2 + z%2 == 1)  &&  random(100) >= (100 - probability)) {
 
             habitatGen[x][y][z] = true;
           }
@@ -26,7 +26,7 @@ boolean[][][] generate(boolean[][][] habitatGen, float fraction, int probability
 
     for (int x = seedStart ; x < seedEnd ; x++) {
       for (int y = seedStart ; y < seedEnd ; y++) {
-        if (isCoord(x, y, z)  &&  random(100) >= (100 - probability)) {
+        if ((x%2 + y%2 + z%2 == 1)  &&  random(100) >= (100 - probability)) {
 
           habitatGen[x][y][z] = true;
         }
