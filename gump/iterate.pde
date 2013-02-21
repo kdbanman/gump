@@ -1,5 +1,6 @@
-boolean[][][] iterate(boolean[][][] habitatIter, int population) {
+boolean[][][] iterate(boolean[][][] habitatIter) {
 
+  population = 0;
   boolean[][][] iterated = new boolean[habitatIter.length][habitatIter.length][habitatIter.length];
 
   for (int i = 0 ; i < coordList.length ; i++) {

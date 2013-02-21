@@ -1,5 +1,8 @@
 boolean toroidal(boolean[][][] habitatTor, int x, int y, int z) {
-
+  /*
+    calculates the coordinate mod the environment size.
+    necessary because processing handles negative mod strangely.
+  */
   //if the array indices called are out of bounds by integer > 0, return their toroidal counterparts
   int xTrans = (x < 0) ? (habitatTor.length + x) : ( (x >= habitatTor.length)?(x - habitatTor.length):x );
   int yTrans = (y < 0) ? (habitatTor.length + y) : ( (y >= habitatTor.length)?(y - habitatTor.length):y );

@@ -8,7 +8,7 @@ import processing.opengl.*;
 
 // Size of (toroidal) cubic, 3D habitat container.
 //   for interface, guard from 1 to (N % 2 == 1 ? N : N - 1)
-int habitatSize = 32;
+int habitatSize = 14;
 
 // Seed generation mode.  Seeds are always planted centrally in the environment.
 //     1 for cube shape
@@ -16,10 +16,10 @@ int habitatSize = 32;
 int generateMode = 1;
 
 // Seed size as fraction of the environment
-float seedFraction = 0.3;
+float seedFraction = 0.7;
 
 // Probability that any cell within the seed will become live (0 - 100)
-int seedProbability = 50;
+int seedProbability = 100;
 
 // Rendering mode.
 //     1 for 3D, with a mouse controlled camera: L/R rotation, U/D zoom
@@ -38,7 +38,6 @@ int renderMode = 1;
 // habitat arrays
 //   at the beginning of each timestep, newHabitat is calculated from the (old) habitat
 //   at the end of each timest
-Environment environment = new Environment(habitatSize);
 boolean[][][] habitat = new boolean[habitatSize][habitatSize][habitatSize];
 boolean[][][] newHabitat = new boolean[habitatSize][habitatSize][habitatSize];
 
@@ -67,9 +66,7 @@ void setup() {
 
 void draw() {
 
-  population = 0;
-
-  newHabitat = iterate(habitat, population);
+  newHabitat = iterate(habitat);
 
   habitat = newHabitat;
 

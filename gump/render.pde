@@ -13,8 +13,8 @@ void render(int mode) {
         axialPaint(x, y, z);
       } 
     }
-  }
-
+  } 
+  
   else if (mode == 2) {
  
     int z = round(habitat.length / 2);
@@ -35,27 +35,6 @@ void render(int mode) {
         }
       }
     }
-  }
-    else {
-
-      int x = round(habitat.length / 2);
-
-      for (int z = 0 ; z < habitat.length ; z++) {
-        for (int y = 0 ; y < habitat.length ; y++) { 
-
-          if (habitat[x][y][z]) {
-
-            fill(#00FFAC);
-            rect(5*z, 5*y, 5, 5);
-          } 
-          else {
-
-            int shade = round(cellCount[x][y][z] * 256 / maxCount);
-            fill(shade);
-            rect(5*z, 5*y, 5, 5);
-          }
-        }
-      }
-    }
-  }
+  }    
+}
 
