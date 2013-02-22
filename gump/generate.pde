@@ -10,8 +10,6 @@ boolean[][][] generate(boolean[][][] habitatGen, float fraction, int probability
   int seedEnd =  round( habitatGen.length / 2 + seedLength / 2 );
   if (seedEnd % 2 == 0) seedEnd++;
   seedEnd = min(seedEnd, habitatGen.length - 1);
-  
-  print(String.valueOf(seedStart) + "  " + String.valueOf(seedEnd));
 
   if (mode == 1) {
     // full cube of on cells

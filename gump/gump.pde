@@ -96,6 +96,11 @@ void draw() {
     mouseCamera(environment, renderEmpty);
     
     if (frameCounter % framesPerIter == 0) {
+      String[] datapoint = new String[2];
+      datapoint[0] = str(environment.generation);
+      datapoint[1] = str(environment.population);
+      output.println( join(datapoint, "     ") );
+      
       environment.iterate();
     }
     frameCounter++;
@@ -108,11 +113,6 @@ void draw() {
   // key system variable is not cleared by default, so set it to an unused value '~' before keyPressed() fills it
   key = '~';
   keyPressed();
-
-  String[] datapoint = new String[2];
-  datapoint[0] = str(environment.generation);
-  datapoint[1] = str(environment.population);
-  output.println( join(datapoint, "     ") );
   
 }
 
