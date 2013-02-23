@@ -19,8 +19,24 @@ Runs on [Processing](http://processing.org/) - just download Processing
 
 This was the first thing I constructed programmatically which I feel is
 truly a composition of my own.  While the idea may be something I'm proud of, 
-the software engineering practices are not.  This is a project that was undertaken
-with very little programming experience.
+the software engineering practices are not (see heading below).
+
+The automata ruleset exhibits some pretty interesting
+characteristics with some experimentation.  If you want a quick example of the
+interesting characteristics, meander over to the cubic_init_results directory
+and click around.  The seeds are much more interesting to look at as they
+evolve, rather than as their run statistics.  See the readme in that directory
+to get them going yourself.
+
+#### Public Abominations
+
+I am slowly working my way through the code to refactor and make sanity.  But,
+my lack of experience at the time of gump's inception still shows:
+
+- Laziness-motivated global variables
+- Little and/or meaningless commenting
+- Unnecessary abstraction in places, not enough in others
+- Inconsisent variable naming
 
 ## cGump
 
@@ -30,19 +46,3 @@ A library for expressing and iterating gump environments that is much more effic
 than the Processing visual environment.  The goal is to create a good serialization for a gump environment
 so that seeds may be made visually and intuitively in Processing, saved to a file, and processed
 by the cGump library.
-
-### Public Abominations
-
-My lack of experience at the time shows, so I published this as an example of some bad practices:
-
-- Laziness-motivated global variables
-- Little and/or meaningless commenting
-- Unnecessary abstraction in places, not enough in others
-- Inconsisent variable naming
-
-Additionally, I do like the idea that underlies it.  The automata ruleset exhibits some pretty interesting
-characteristics with some experimentation.
-
-`#TODO cubic tendencies`
-`#TODO population graphs`
-
