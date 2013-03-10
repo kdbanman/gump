@@ -49,6 +49,34 @@ public static class Environment {
   } // end constructor
   
   
+  public int getSeedStart(float fraction) {
+    /*
+      returns the first plane in the central seed of fractional size passed
+    */
+    float seedLength = this.dimSize * fraction;
+    
+    int seedStart = round(this.dimSize / 2 - seedLength / 2 );
+    if (seedStart % 2 == 0) seedStart++;
+    seedStart = min(seedStart, this.dimSize - 1);
+    
+    return seedStart;
+  }
+  
+  
+  public int getSeedEnd(float fraction) {
+    /*
+      returns the last plane in the central seed of fractional size passed
+    */
+    float seedLength = this.dimSize * fraction;
+    
+    int seedEnd =  round(this.dimSize / 2 + seedLength / 2 );
+    if (seedEnd % 2 == 0) seedEnd++;
+    seedEnd = min(seedEnd, dimSize - 1);
+    
+    return seedEnd;
+  }
+  
+  
   private boolean isCoord(int x,int y,int z)
   {
     /*

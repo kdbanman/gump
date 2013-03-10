@@ -1,15 +1,8 @@
 boolean[][][] generate(boolean[][][] habitatGen, float fraction, int probability, int mode) {
 
   // generate the first and last indices of the seed, odd for plane enclosure
-  float seedLength = habitatGen.length * fraction;
-  
-  int seedStart = round( habitatGen.length / 2 - seedLength / 2 );
-  if (seedStart % 2 == 0) seedStart++;
-  seedStart = min(seedStart, habitatGen.length - 1);
-  
-  int seedEnd =  round( habitatGen.length / 2 + seedLength / 2 );
-  if (seedEnd % 2 == 0) seedEnd++;
-  seedEnd = min(seedEnd, habitatGen.length - 1);
+  int seedStart = getSeedStart(habitatGen, fraction);
+  int seedEnd = getSeedEnd(habitatGen, fraction);
 
   if (mode == 1) {
     // full cube of on cells
