@@ -11,11 +11,10 @@ public static class ConstructionCamera {
       - focused planes are the only ones rendered without transparency
       - up and down arrows control focus on particular planes.
     data controls:
-      - mouse click on a cell toggles
+      - mouse click on a cell toggles it
       - mouse dragged across cells toggles 
       - 'c' clears entire seed
     
-    IMPORTANT:  this function depends upon the system variable key
   */
   
   
@@ -37,6 +36,8 @@ public static class ConstructionCamera {
   private static int mouseXMax;
   private static int mouseYMin;
   private static int mouseYMax;
+  // pixel dimension of each cell when in focussed plane
+  private static int cellDim;
   
   public ConstructionCamera(Environment env, float fraction, PeasyCam cam, int windowW, int windowH) {
     this.environ = env;
@@ -59,10 +60,12 @@ public static class ConstructionCamera {
     this.cam.setRotations(0, PI, 0);
     this.plane = minPlane;
     
-    this.mouseXMin = (int) (0.266 * (float) windowW);
-    this.mouseXMax = (int) ((1-0.266) * (float) windowW);
+    this.mouseXMin = (int) (0.162 * (float) windowW);
+    this.mouseXMax = (int) ((1-0.162) * (float) windowW);
     this.mouseYMin = 0;
     this.mouseYMax = windowH;
+    
+    this.cellDim = (this.mouseXMax - this.mouseXMin) / 9;
   }
   
   public void forward() {
@@ -107,9 +110,62 @@ public static class ConstructionCamera {
     }
   }
   
-  public void mouseToggle(Environment env, int mX, int mY) {
-    //TODO: currently have environment boundaries of environment cells per plane stored in
-    // mouseXMax, etc.  there are 8 cells per linear dimension, so subtract the min from the mouse coord, divide by 8,
-    // then mod the width of each cell (1.9cm by 1.9cm
+  public void mouseToggle(int mX, int mY) {
+    // rendered pixel boundaries of environment cells for the in-focus plane are stored in mouseXMax, mouseYMax,
+    // mouseXMin, mouseYMin.
+    // there are 9 cells per linear dimension, so subtract the min from the mouse coord, divide by 9, and
+    // then mod the width of each cell (84 pixels)
+    if (mX <= mouseXMax && mX >= mouseXMin && mY <= mouseYMax && mY >= mouseYMin) {
+      int clickX = 2 * ((mX - this.mouseXMin) / cellDim);
+      int clickY = 2 * ((mY - this.mouseYMin) / cellDim);
+      
+      int xCoord = this.minPlane + 1;
+      int yCoord = this.minPlane + 1;
+      int zCoord = this.minPlane + 1;
+      
+      if (this.planeSet == 0) {
+        xCoord -= clickX - this.maxPlane + this.minPlane + 2;
+        yCoord += clickY;
+        zCoord = this.plane;
+      } else if (this.planeSet == 1) {
+        xCoord += clickX;
+        yCoord = this.plane;
+        zCoord += clickY;
+      } else {
+        xCoord = this.plane;
+        yCoord += clickY;
+        zCoord += clickX;
+      }
+      
+      this.environ.habitat[xCoord][yCoord][zCoord] = !this.environ.habitat[xCoord][yCoord][zCoord];
+    }
+    
+  }
+ 
+  public void generateFull(int seedSize) {
+    // populate habitat with full cube of on cells of size seedSize
+        
+    for (int x = this.minPlane; x <= maxPlane; x++) {
+      for (int y = this.minPlane; y <= maxPlane; y++) {
+        for (int z = this.minPlane; z <= maxPlane; z++) {
+          if (x%2 + y%2 + z%2 == 1) {
+            this.environ.habitat[x][y][z] = false;
+          }
+        }
+      }
+    }
+          
+    int seedStart = this.environ.dimSize / 2 - seedSize / 2;
+    int seedEnd = seedStart + seedSize;
+ 
+    for (int x = seedStart ; x <= seedEnd ; x++) {
+      for (int y = seedStart ; y <= seedEnd ; y++) {
+        for (int z = seedStart ; z <= seedEnd ; z++) {
+          if (x%2 + y%2 + z%2 == 1) {
+            this.environ.habitat[x][y][z] = true;
+          }
+        }
+      }
+    }
   }
 }
