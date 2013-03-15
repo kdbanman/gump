@@ -1,25 +1,27 @@
 public static class ConstructionCamera {
   /*
     gui for constructing seeds.  only one plane is in focus at a time, mouse click on cells toggle them. 
-    camera properties:
-      - always orthogonal to one of the plane sets.
-      - left and right arrows control rotation for focus on particular plane sets.
-      - up and down arrows control forward and back movement
-        - maintain distance from plane in focus for consistency of mouse click locations
-        - never get close enough for cutoff bug
-    render properties:
-      - focused planes are the only ones rendered without transparency
-      - up and down arrows control focus on particular planes.
-    data controls:
-      - mouse click on a cell toggles it
-      - mouse dragged across cells toggles 
-      - 'c' clears entire seed
-    
-  */
-  
-  
+   camera properties:
+   - always orthogonal to one of the plane sets.
+   - left and right arrows control rotation for focus on particular plane sets.
+   - up and down arrows control forward and back movement
+   - maintain distance from plane in focus for consistency of mouse click locations
+   - never get close enough for cutoff bug
+   render properties:
+   - focused planes are the only ones rendered without transparency
+   - up and down arrows control focus on particular planes.
+   data controls:
+   - mouse click on a cell toggles it
+   - mouse dragged across cells toggles 
+   - 'c' clears entire seed
+   
+   */
+
+
   // Flag to indicate plane set currently being constructed, 0 => xy, 1 => xz, 2 => yz
   private static int planeSet;
+  // Rotation target for switching between planesets
+  private static RotationCoordinate rotTarget;
   // Plane number within plane set currently being constructed
   //   can only be odd
   //   must be in interval centered in evronment ~38% its length (denoted by minPlane, maxPlane)
@@ -38,11 +40,11 @@ public static class ConstructionCamera {
   private static int mouseYMax;
   // pixel dimension of each cell when in focussed plane
   private static int cellDim;
-  
+
   public ConstructionCamera(Environment env, float fraction, PeasyCam cam, int windowW, int windowH) {
     this.environ = env;
     this.cam = cam;
-    
+
     double middle = ((double) this.environ.dimSize) / 2 * 10 + 10;
     this.camDist = middle - 14;
     this.cam.setDistance(this.camDist);
@@ -51,23 +53,25 @@ public static class ConstructionCamera {
     this.cam.setMaximumDistance(middle*2);
     this.cam.setSuppressRollRotationMode();
     this.cam.setActive(false);
-    
+
     this.minPlane = env.getSeedStart(fraction);
     this.maxPlane = env.getSeedEnd(fraction);
-    
+
     // initial focus on first seed plane of plane set xy
     this.planeSet = 0;
+    this.rotTarget = new RotationCoordinate(this.cam);
     this.cam.setRotations(0, PI, 0);
-    this.plane = minPlane;
     
+    this.plane = minPlane;
+
     this.mouseXMin = (int) (0.162 * (float) windowW);
     this.mouseXMax = (int) ((1-0.162) * (float) windowW);
     this.mouseYMin = 0;
     this.mouseYMax = windowH;
-    
+
     this.cellDim = (this.mouseXMax - this.mouseXMin) / 9;
   }
-  
+
   public void forward() {
     if (this.plane < this.maxPlane) {
       this.plane += 2;
@@ -75,7 +79,7 @@ public static class ConstructionCamera {
       this.cam.setDistance(this.camDist);
     }
   }
-  
+
   public void backward() {
     if (this.plane > this.minPlane) {
       this.plane -= 2;
@@ -83,7 +87,7 @@ public static class ConstructionCamera {
       this.cam.setDistance(this.camDist);
     }
   }
-  
+
   public void rotLeft() {
     if (this.planeSet == 0) {
       this.planeSet = 1;
@@ -96,20 +100,22 @@ public static class ConstructionCamera {
       this.cam.setRotations(0, PI, 0);
     }
   }
-  
+
   public void rotRight() {
     if (this.planeSet == 2) {
       this.planeSet = 1;
       this.cam.setRotations(PI/2, 0, 0);
-    } else if (this.planeSet == 0) {
+    } 
+    else if (this.planeSet == 0) {
       this.planeSet = 2;
       this.cam.setRotations(0, 3*PI/2, 0);
-    } else {
+    } 
+    else {
       this.planeSet = 0;
       this.cam.setRotations(0, PI, 0);
     }
   }
-  
+
   public void mouseToggle(int mX, int mY) {
     // rendered pixel boundaries of environment cells for the in-focus plane are stored in mouseXMax, mouseYMax,
     // mouseXMin, mouseYMin.
@@ -118,34 +124,35 @@ public static class ConstructionCamera {
     if (mX <= mouseXMax && mX >= mouseXMin && mY <= mouseYMax && mY >= mouseYMin) {
       int clickX = 2 * ((mX - this.mouseXMin) / cellDim);
       int clickY = 2 * ((mY - this.mouseYMin) / cellDim);
-      
+
       int xCoord = this.minPlane + 1;
       int yCoord = this.minPlane + 1;
       int zCoord = this.minPlane + 1;
-      
+
       if (this.planeSet == 0) {
         xCoord -= clickX - this.maxPlane + this.minPlane + 2;
         yCoord += clickY;
         zCoord = this.plane;
-      } else if (this.planeSet == 1) {
+      } 
+      else if (this.planeSet == 1) {
         xCoord += clickX;
         yCoord = this.plane;
         zCoord += clickY;
-      } else {
+      } 
+      else {
         xCoord = this.plane;
         yCoord += clickY;
         zCoord += clickX;
       }
-      
+
       this.environ.habitat[xCoord][yCoord][zCoord] = !this.environ.habitat[xCoord][yCoord][zCoord];
     }
-    
   }
- 
+
   public void generateFull(int seedSize) {
     // populate habitat with full cube of on cells of size seedSize
-        
-    for (int x = this.minPlane; x <= maxPlane; x++) {
+
+      for (int x = this.minPlane; x <= maxPlane; x++) {
       for (int y = this.minPlane; y <= maxPlane; y++) {
         for (int z = this.minPlane; z <= maxPlane; z++) {
           if (x%2 + y%2 + z%2 == 1) {
@@ -154,10 +161,10 @@ public static class ConstructionCamera {
         }
       }
     }
-          
+
     int seedStart = this.environ.dimSize / 2 - seedSize / 2;
     int seedEnd = seedStart + seedSize;
- 
+
     for (int x = seedStart ; x <= seedEnd ; x++) {
       for (int y = seedStart ; y <= seedEnd ; y++) {
         for (int z = seedStart ; z <= seedEnd ; z++) {
@@ -169,3 +176,4 @@ public static class ConstructionCamera {
     }
   }
 }
+
