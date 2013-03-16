@@ -32,8 +32,8 @@ When you're happy with your seed, press **enter** to start its evolution.  Here'
 - Press **-** to zoom out
 
 Try shit.  Get one of the predesigned seeds up with the number keys and spell your name
-in it.  Draw a happy face in it.  Turn off just the corners.  Click around like a drunk
-cowboy.  If something breaks horribly, then I guess I'm not a very good software engineer - 
+in it.  Draw a happy face in it.  Turn off just the corners.  Click around like a maniac.
+If something breaks horribly, then I guess I'm not a very good software engineer - 
 restart gump if you want to try again.
 
 ##Predesigned Seeds
