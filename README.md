@@ -5,9 +5,9 @@ To get it running, you need Java.  If you don't have it, google, "i need java pl
 
 If you want to play with gump, download the zip file for your your operating system and extract it.  Inside the 
 extracted folder:
-- For windows, run gump.exe.
-- Mac OS, run the gump app.
-- Run "./gump" or "bash ./gump" from your favorite shell terminal or something.
+- For [gump_windows.zip](https://github.com/kdbanman/gump/blob/master/gump_windows.zip), extract and run gump.exe.
+- For [gump_macos.zip](https://github.com/kdbanman/gump/blob/master/gump_macosx.zip), extract and run the gump app.
+- For [gump_linux.zip](https://github.com/kdbanman/gump/blob/master/gump_linux.zip), extract and run "./gump" or "bash ./gump" from your favorite shell terminal or something.
 
 If you want to muck around in the source, you need [Processing 1.51](http://processing.org/download/).
 
