@@ -83,7 +83,7 @@ This project has a distinctive workflow:
     4. Refactor and abstract, testing to make sure I'm not breaking anything
     5. Use the gump's shiny new guts to implement features I want
     6. Continue adding features like a drunk cowboy until the slightest perturbation of code sets my computer on fire
-    7. Pour frustrated hours into shoestring-and-duct-tape-fixing things that the drunk cowboy broke until I hate gump
+    7. Pour frustrated hours into shoestring-and-duct-tape-fixes for things that the drunk cowboy broke until I hate gump
     8. Work on things that survived the neglegt caused by steps 1-7
     9. GOTO 1
 
