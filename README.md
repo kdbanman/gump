@@ -3,8 +3,11 @@ A 3D automata that seems to do neat things.
 
 To get it running, you need Java.  If you don't have it, google, "i need java please" and follow your nose.
 
-If you want to play with gump, download the whole folder for your your operating system.
-For windows, run the .exe.  Mac OS, run the gump app.  Run gump from your favorite shell terminal or something.
+If you want to play with gump, download the zip file for your your operating system and extract it.  Inside the 
+extracted folder:
+- For windows, run gump.exe.
+- Mac OS, run the gump app.
+- Run "./gump" or "bash ./gump" from your favorite shell terminal or something.
 
 If you want to muck around in the source, you need [Processing 1.51](http://processing.org/download/).
 
