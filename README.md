@@ -38,10 +38,10 @@ restart gump if you want to try again.
 
 ##Predesigned Seeds
 
-The odd keys spawn asymmetrical seeds that evolve into a wierd flat thing with diagonals that will eventually 
+The odd number keys spawn asymmetrical seeds that evolve into a wierd flat thing with diagonals that will eventually 
 collapse.  Number 5 looks *so sweet* when running really fast and looked at the side with all bright colors.
 
-The even keys spawn symmetrical seeds that have much shorter lifespans, but evolve with really neat structures until 
+The even number keys spawn symmetrical seeds that have much shorter lifespans, but evolve with really neat structures until 
 they collapse.  Number 8 turns into one of the most interesting stable structures I've seen gump produce.
 
 The default seed that pops up when gump starts is symmetrical (it's a closed cube).  It makes a shape like an 8-
