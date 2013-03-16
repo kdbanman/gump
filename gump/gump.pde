@@ -82,13 +82,18 @@ void keyPressed()
       exit();
   }
   if (constructing) {
+    
     if (key == CODED) {
+      
       if (keyCode == UP) {
         constrCam.forward();
+        
       } else if (keyCode == DOWN) {
         constrCam.backward();
+        
       } else if (keyCode == LEFT) {
         constrCam.rotLeft();
+        
       } else if (keyCode == RIGHT) {
         constrCam.rotRight();
       }
@@ -96,11 +101,18 @@ void keyPressed()
       constructing = false;
       cam.setActive(true);
       hint(ENABLE_DEPTH_TEST);
-    } 
+      
+    } else if (key >= '1' && key <= '9') {
+      int seedSize = key - 40;
+      constrCam.generateFull(seedSize);     
+    }
+    
   } else {
     if (key == CODED) {
+      
       if (keyCode == UP) {
         framesPerIter = max(1, framesPerIter / 2);
+        
       } else if (keyCode == DOWN) {
         framesPerIter *= 2;
       }
@@ -110,7 +122,9 @@ void keyPressed()
 
 
 void mousePressed() {
-  constrCam.mouseToggle(environment, mouseX, mouseY);
+  if (constructing) {
+    constrCam.mouseToggle(mouseX, mouseY);
+  }
 }
 
 
