@@ -110,3 +110,18 @@ so that high-level analysis may be done programmatically
 - create a good serialization for a gump environment
 so that seeds may be made visually and intuitively in Processing, saved to a file, and processed
 by the cGump library
+
+## License
+
+Copyright (c) 2012 - 2013 Kirby Banman
+
+Permissions are hereby granted to any person obtaining a copy of this software
+as specified in the GNU GPLv3 license (see license.txt).
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
