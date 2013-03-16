@@ -3,7 +3,7 @@ A 3D automata that seems to do neat things.
 
 To get it running, you need Java.  If you don't have it, google, "i need java please" and follow your nose.
 
-If you want to play with gump, download the whole folder for your your operating system in the "executables" directory.  
+If you want to play with gump, download the whole folder for your your operating system.
 For windows, run the .exe.  Mac OS, run the gump app.  Run gump from your favorite shell terminal or something.
 
 If you want to muck around in the source, you need [Processing 1.51](http://processing.org/download/).
@@ -49,7 +49,7 @@ sided die that evolves with slowly collapsing structure for many thousands of ge
 
 Recurring theme:  They all grow, evolve stably, then collapse.  See if you can make one that doesn't.  ...Or don't.
 
-## Visualization
+## What is this?
 
 Runs on [Processing](http://processing.org/) (tested on 1.51).
 Main program is in gump.pde.
@@ -58,7 +58,7 @@ Gump visualizes a particular example the computational concept called cellular
 automata. A cellular automaton is just a set of rules that describe how
 a system evolves. These systems are spatial lattices of cells that form
 self-modifying environments, as characterized by the rules. One of the
-simplest and most beautiful examples is also the earliest ever discovered,
+simplest and most beautiful examples is also one of the earliest ever discovered,
 called Conway's Game of Life (often abbreviated as Life). Life was inspired by
 population dynamics of living organisms, and Gump was inpired by Life.
 
@@ -71,7 +71,8 @@ characteristics with some experimentation.  If you want a quick example of the
 interesting characteristics, meander over to the cubic_init_results directory
 and click around.  The seeds are much more interesting to look at as they
 evolve, rather than as their run statistics.  See the readme in that directory
-to get them going yourself.
+to get them going yourself.  Be warned, source mucking may be necessary, and the
+project is currently at a point where that may have unforseen terrible consequences.
 
 #### On Public Abominations
 
