@@ -51,8 +51,8 @@ Recurring theme:  They all grow, evolve stably, then collapse.  See if you can m
 
 ## Visualization
 
-Runs on [Processing](http://processing.org/) - just download Processing
-(tested on 1.51), open gump.pde, and hit the go button in the top left.
+Runs on [Processing](http://processing.org/) (tested on 1.51).
+Main program is in gump.pde.
 
 Gump visualizes a particular example the computational concept called cellular
 automata. A cellular automaton is just a set of rules that describe how
@@ -77,15 +77,15 @@ to get them going yourself.
 
 This project has a distinctive workflow:
 
-    1. Get sick of working on other stuff that I hate
-    2. Remember that I have a working automaton that I find interesting
-    3. Look through the source code and become horrified
-    4. Refactor and abstract, testing to make sure I'm not breaking anything
-    5. Use the gump's shiny new guts to implement features I want
-    6. Continue adding features like a drunk cowboy until the slightest perturbation of code sets my computer on fire
-    7. Pour frustrated hours into shoestring-and-duct-tape-fixes for things that the drunk cowboy broke until I hate gump
-    8. Work on things that survived the neglegt caused by steps 1-7
-    9. GOTO 1
+1. Get sick of working on other stuff that I hate
+2. Remember that I have a working automaton that I find interesting
+3. Look through the source code and become horrified
+4. Refactor and abstract, testing to make sure I'm not breaking anything
+5. Use the gump's shiny new guts to implement features I want
+6. Continue adding features like a drunk cowboy until the slightest perturbation of code sets my computer on fire
+7. Pour frustrated hours into shoestring-and-duct-tape-fixes for things that the drunk cowboy broke until I hate gump
+8. Work on things that survived the neglegt caused by steps 2-7
+9. GOTO 1
 
 As you'd imagine, this workflow means most of gump's life is spent held together by said shoesttrings and bits of tape, so be warned of:
 
@@ -93,6 +93,7 @@ As you'd imagine, this workflow means most of gump's life is spent held together
 - Little and/or meaningless commenting
 - Unnecessary abstraction in places, not enough in others
 - Inconsisent variable naming
+- Critical sensitivity on arbitrary-looking parameters
 
 ## cGump
 
