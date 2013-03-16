@@ -144,8 +144,14 @@ public void keyPressed()
     } else if (key >= '1' && key <= '9') {
       int seedSize = key - 40;
       constrCam.generateFull(seedSize);     
+      
+    } else if (freeConstCam) {
+      if (key == '-') {
+        this.cam.setDistance(this.cam.getDistance() + 30);
+      } else if (key == '=') {
+        this.cam.setDistance(this.cam.getDistance() - 30);
+      }
     }
-    
   } else {
     if (key == CODED) {
       
@@ -155,6 +161,10 @@ public void keyPressed()
       } else if (keyCode == DOWN) {
         framesPerIter *= 2;
       }
+    } else if (key == '-') {
+      this.cam.setDistance(this.cam.getDistance() + 30);
+    } else if (key == '=') {
+      this.cam.setDistance(this.cam.getDistance() - 30);
     }
   }
 }
@@ -201,60 +211,34 @@ public void draw() {
 
 
 public static class RotationCoordinate {
-  private PeasyCam cam;
-  private CameraState defState;
+  private Rotation zeroRot;
+  private Rotation oneRot;
+  private Rotation twoRot;
+  
+  private Vector3D lookAt;
   
   private CameraState zeroCam;
   private CameraState oneCam;
   private CameraState twoCam;
   
-  public RotationCoordinate(PeasyCam cam) {
-    this.cam = cam;
+  public RotationCoordinate(double middle) {
+    lookAt = new Vector3D(middle, middle, middle);
     
-    Rotation defRot = new Rotation();
-    Vector3D defCenter = new Vector3D();
-    double defDist = 10;
-    this.defState = new CameraState(defRot, defCenter, defDist);
-    
-    this.zeroCam = this.defState;
-    this.oneCam = this.defState;
-    this.twoCam = this.defState;
+    zeroRot = new Rotation(RotationOrder.XYZ, 0, PI, 0);
+    oneRot = new Rotation(RotationOrder.XYZ, PI/2, 0, 0);
+    twoRot = new Rotation(RotationOrder.XYZ, 0, 3*PI/2, 0);
   }
   
-  public CameraState getZeroCam() {
-    print("here\nhere\nhere\nhere\nhere\nhere");
-    if ((this.zeroCam).equals(this.defState)) {
-      CameraState curr = this.cam.getState();
-      cam.setRotations(0, PI, 0);
-      this.zeroCam = cam.getState();
-      cam.setState(curr);
-    }
-    
-    return this.zeroCam;
+  public CameraState getZeroCam(double distance) {
+    return new CameraState(this.zeroRot, this.lookAt, distance);
   }
   
-  public CameraState getOneCam() {
-    if ((this.oneCam).equals(this.defState)) {
-      print("here\nhere\nhere\nhere\nhere\nhere");
-      CameraState curr = this.cam.getState();
-      cam.setRotations(PI/2, 0, 0);
-      this.zeroCam = cam.getState();
-      cam.setState(curr);
-    }
-    
-    return this.oneCam;
+  public CameraState getOneCam(double distance) {
+    return new CameraState(this.oneRot, this.lookAt, distance);
   }
   
-  public CameraState getTwoCam() {
-    print("here\nhere\nhere\nhere\nhere\nhere");
-    if ((this.twoCam).equals(this.defState)) {
-      CameraState curr = this.cam.getState();
-      cam.setRotations(0, 3*PI/2, 0);
-      this.zeroCam = cam.getState();
-      cam.setState(curr);
-    }
-    
-    return this.twoCam;
+  public CameraState getTwoCam(double distance) {
+    return new CameraState(this.twoRot, this.lookAt, distance);
   }
 }
 // overloading is for selective transparency when rendering for construction mode
@@ -325,8 +309,6 @@ public static class ConstructionCamera {
    - always orthogonal to one of the plane sets.
    - left and right arrows control rotation for focus on particular plane sets.
    - up and down arrows control forward and back movement
-   - maintain distance from plane in focus for consistency of mouse click locations
-   - never get close enough for cutoff bug
    render properties:
    - focused planes are the only ones rendered without transparency
    - up and down arrows control focus on particular planes.
@@ -340,8 +322,8 @@ public static class ConstructionCamera {
 
   // Flag to indicate plane set currently being constructed, 0 => xy, 1 => xz, 2 => yz
   private static int planeSet;
-  // Rotation target for switching between planesets
-  private static RotationCoordinate rotTarget;
+  // Rotation targets for switching between planesets smoothly
+  private static RotationCoordinate rotTargets;
   // Plane number within plane set currently being constructed
   //   can only be odd
   //   must be in interval centered in evronment ~38% its length (denoted by minPlane, maxPlane)
@@ -379,7 +361,7 @@ public static class ConstructionCamera {
 
     // initial focus on first seed plane of plane set xy
     this.planeSet = 0;
-    this.rotTarget = new RotationCoordinate(this.cam);
+    this.rotTargets = new RotationCoordinate(middle);
     this.cam.setRotations(0, PI, 0);
     
     this.plane = minPlane;
@@ -411,28 +393,28 @@ public static class ConstructionCamera {
   public void rotLeft() {
     if (this.planeSet == 0) {
       this.planeSet = 1;
-      this.cam.setRotations(PI/2, 0, 0);
+      this.cam.setState(this.rotTargets.getOneCam(this.camDist));
     } else if (this.planeSet == 1) {
       this.planeSet = 2;
-      this.cam.setRotations(0, 3*PI/2, 0);
+      this.cam.setState(this.rotTargets.getTwoCam(this.camDist));
     } else {
       this.planeSet = 0;
-      this.cam.setRotations(0, PI, 0);
+      this.cam.setState(this.rotTargets.getZeroCam(this.camDist));
     }
   }
 
   public void rotRight() {
     if (this.planeSet == 2) {
       this.planeSet = 1;
-      this.cam.setRotations(PI/2, 0, 0);
+      this.cam.setState(this.rotTargets.getOneCam(this.camDist));
     } 
     else if (this.planeSet == 0) {
       this.planeSet = 2;
-      this.cam.setRotations(0, 3*PI/2, 0);
+      this.cam.setState(this.rotTargets.getTwoCam(this.camDist));
     } 
     else {
       this.planeSet = 0;
-      this.cam.setRotations(0, PI, 0);
+      this.cam.setState(this.rotTargets.getZeroCam(this.camDist));
     }
   }
 

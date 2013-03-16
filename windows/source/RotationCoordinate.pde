@@ -1,57 +1,31 @@
 public static class RotationCoordinate {
-  private PeasyCam cam;
-  private CameraState defState;
+  private Rotation zeroRot;
+  private Rotation oneRot;
+  private Rotation twoRot;
+  
+  private Vector3D lookAt;
   
   private CameraState zeroCam;
   private CameraState oneCam;
   private CameraState twoCam;
   
-  public RotationCoordinate(PeasyCam cam) {
-    this.cam = cam;
+  public RotationCoordinate(double middle) {
+    lookAt = new Vector3D(middle, middle, middle);
     
-    Rotation defRot = new Rotation();
-    Vector3D defCenter = new Vector3D();
-    double defDist = 10;
-    this.defState = new CameraState(defRot, defCenter, defDist);
-    
-    this.zeroCam = this.defState;
-    this.oneCam = this.defState;
-    this.twoCam = this.defState;
+    zeroRot = new Rotation(RotationOrder.XYZ, 0, PI, 0);
+    oneRot = new Rotation(RotationOrder.XYZ, PI/2, 0, 0);
+    twoRot = new Rotation(RotationOrder.XYZ, 0, 3*PI/2, 0);
   }
   
-  public CameraState getZeroCam() {
-    print("here\nhere\nhere\nhere\nhere\nhere");
-    if ((this.zeroCam).equals(this.defState)) {
-      CameraState curr = this.cam.getState();
-      cam.setRotations(0, PI, 0);
-      this.zeroCam = cam.getState();
-      cam.setState(curr);
-    }
-    
-    return this.zeroCam;
+  public CameraState getZeroCam(double distance) {
+    return new CameraState(this.zeroRot, this.lookAt, distance);
   }
   
-  public CameraState getOneCam() {
-    if ((this.oneCam).equals(this.defState)) {
-      print("here\nhere\nhere\nhere\nhere\nhere");
-      CameraState curr = this.cam.getState();
-      cam.setRotations(PI/2, 0, 0);
-      this.zeroCam = cam.getState();
-      cam.setState(curr);
-    }
-    
-    return this.oneCam;
+  public CameraState getOneCam(double distance) {
+    return new CameraState(this.oneRot, this.lookAt, distance);
   }
   
-  public CameraState getTwoCam() {
-    print("here\nhere\nhere\nhere\nhere\nhere");
-    if ((this.twoCam).equals(this.defState)) {
-      CameraState curr = this.cam.getState();
-      cam.setRotations(0, 3*PI/2, 0);
-      this.zeroCam = cam.getState();
-      cam.setState(curr);
-    }
-    
-    return this.twoCam;
+  public CameraState getTwoCam(double distance) {
+    return new CameraState(this.twoRot, this.lookAt, distance);
   }
 }

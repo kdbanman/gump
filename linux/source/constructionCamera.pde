@@ -5,8 +5,6 @@ public static class ConstructionCamera {
    - always orthogonal to one of the plane sets.
    - left and right arrows control rotation for focus on particular plane sets.
    - up and down arrows control forward and back movement
-   - maintain distance from plane in focus for consistency of mouse click locations
-   - never get close enough for cutoff bug
    render properties:
    - focused planes are the only ones rendered without transparency
    - up and down arrows control focus on particular planes.
@@ -20,8 +18,8 @@ public static class ConstructionCamera {
 
   // Flag to indicate plane set currently being constructed, 0 => xy, 1 => xz, 2 => yz
   private static int planeSet;
-  // Rotation target for switching between planesets
-  private static RotationCoordinate rotTarget;
+  // Rotation targets for switching between planesets smoothly
+  private static RotationCoordinate rotTargets;
   // Plane number within plane set currently being constructed
   //   can only be odd
   //   must be in interval centered in evronment ~38% its length (denoted by minPlane, maxPlane)
@@ -59,7 +57,7 @@ public static class ConstructionCamera {
 
     // initial focus on first seed plane of plane set xy
     this.planeSet = 0;
-    this.rotTarget = new RotationCoordinate(this.cam);
+    this.rotTargets = new RotationCoordinate(middle);
     this.cam.setRotations(0, PI, 0);
     
     this.plane = minPlane;
@@ -91,28 +89,28 @@ public static class ConstructionCamera {
   public void rotLeft() {
     if (this.planeSet == 0) {
       this.planeSet = 1;
-      this.cam.setRotations(PI/2, 0, 0);
+      this.cam.setState(this.rotTargets.getOneCam(this.camDist));
     } else if (this.planeSet == 1) {
       this.planeSet = 2;
-      this.cam.setRotations(0, 3*PI/2, 0);
+      this.cam.setState(this.rotTargets.getTwoCam(this.camDist));
     } else {
       this.planeSet = 0;
-      this.cam.setRotations(0, PI, 0);
+      this.cam.setState(this.rotTargets.getZeroCam(this.camDist));
     }
   }
 
   public void rotRight() {
     if (this.planeSet == 2) {
       this.planeSet = 1;
-      this.cam.setRotations(PI/2, 0, 0);
+      this.cam.setState(this.rotTargets.getOneCam(this.camDist));
     } 
     else if (this.planeSet == 0) {
       this.planeSet = 2;
-      this.cam.setRotations(0, 3*PI/2, 0);
+      this.cam.setState(this.rotTargets.getTwoCam(this.camDist));
     } 
     else {
       this.planeSet = 0;
-      this.cam.setRotations(0, PI, 0);
+      this.cam.setState(this.rotTargets.getZeroCam(this.camDist));
     }
   }
 

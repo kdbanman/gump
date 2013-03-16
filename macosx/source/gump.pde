@@ -118,8 +118,14 @@ void keyPressed()
     } else if (key >= '1' && key <= '9') {
       int seedSize = key - 40;
       constrCam.generateFull(seedSize);     
+      
+    } else if (freeConstCam) {
+      if (key == '-') {
+        this.cam.setDistance(this.cam.getDistance() + 30);
+      } else if (key == '=') {
+        this.cam.setDistance(this.cam.getDistance() - 30);
+      }
     }
-    
   } else {
     if (key == CODED) {
       
@@ -129,6 +135,10 @@ void keyPressed()
       } else if (keyCode == DOWN) {
         framesPerIter *= 2;
       }
+    } else if (key == '-') {
+      this.cam.setDistance(this.cam.getDistance() + 30);
+    } else if (key == '=') {
+      this.cam.setDistance(this.cam.getDistance() - 30);
     }
   }
 }
