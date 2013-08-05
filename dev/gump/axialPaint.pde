@@ -2,7 +2,7 @@
 
 void axialPaint(int x, int y, int z) {
   /*
-    colorize the rendered cells according to their plane set
+    colorize the rendered cells according to their planeset
   */
   axialPaintTrans(x, y, z, 255);
 }
