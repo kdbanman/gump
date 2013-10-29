@@ -98,6 +98,7 @@ As you'd imagine, this workflow means most of gump's life is spent held together
 - Unnecessary abstraction in places, not enough in others
 - Inconsisent variable naming
 - Critical sensitivity on arbitrary-looking parameters
+- Alarmingly abused object-oriented design concepts
 
 ## cGump
 
@@ -112,6 +113,8 @@ so that seeds may be made visually and intuitively in Processing, saved to a fil
 by the cGump library
 
 ## License
+
+Processing executables are [LGPL](http://www.gnu.org/licenses/lgpl.html) and PeasyCam is [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html), so I am free to release this project as open source under the [GPLv3](http://www.gnu.org/licenses/gpl-3.0.html):
 
 Copyright (c) 2012 - 2013 Kirby Banman
 
