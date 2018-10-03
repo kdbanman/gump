@@ -1,4 +1,4 @@
-boolean[][][] generate(boolean[][][] habitatGen, float fraction, int probability, int mode) {
+int[][][] generate(int[][][] habitatGen, float fraction, int probability, int mode) {
 
   // generate the first and last indices of the seed, odd for plane enclosure
   int seedStart = getSeedStart(habitatGen, fraction);
@@ -11,7 +11,7 @@ boolean[][][] generate(boolean[][][] habitatGen, float fraction, int probability
         for (int z = seedStart ; z <= seedEnd ; z++) {
           if ((x%2 + y%2 + z%2 == 1)  &&  random(100) >= (100 - probability)) {
 
-            habitatGen[x][y][z] = true;
+            habitatGen[x][y][z] = 1;
           }
         }
       }
@@ -27,7 +27,7 @@ boolean[][][] generate(boolean[][][] habitatGen, float fraction, int probability
       for (int y = seedStart ; y <= seedEnd ; y++) {
         if ((x%2 + y%2 + z%2 == 1)  &&  random(100) >= (100 - probability)) {
 
-          habitatGen[x][y][z] = true;
+          habitatGen[x][y][z] = 1;
         }
       }
     }
@@ -35,4 +35,3 @@ boolean[][][] generate(boolean[][][] habitatGen, float fraction, int probability
 
   return habitatGen;
 }
-

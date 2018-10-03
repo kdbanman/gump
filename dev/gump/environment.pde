@@ -1,3 +1,9 @@
+import java.util.List;
+import java.util.ArrayList;
+import java.util.concurrent.Future;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ExecutionException;
 
 public static class Environment {
   /*
@@ -17,8 +23,8 @@ public static class Environment {
   
   // 3D containers for current and next generations of environment
   //   when iterate() is called, newHabitat is calculated, then habitat is set equal to newHabitat
-  public static boolean[][][] habitat;
-  private static boolean[][][] newHabitat;
+  private static int[][][] habitat;
+  private static int[][][] newHabitat;
   // size of 3D environment container
   public static int dimSize;
   // array of all valid coordinates (since not all cells in the above 3D arrays are environmental)
@@ -28,9 +34,10 @@ public static class Environment {
   // current generation
   public static int generation;
   // cumulative number of generations that each cell has been live
-  public static int cellCount[][][];
-  // current maximum within cellCount
-  public static int maxCount;
+  
+  private static int numThreads;
+  private static List<PartialEnvironmentIterator> threads;
+  private static ExecutorService threadPool;
   
   public Environment(int habSize)
   {
@@ -38,14 +45,16 @@ public static class Environment {
       constructor that defines its habitats and valid coordinates based on the passed size.
       (obviously) only supports cubic environments.
     */
-    this.habitat = new boolean[habSize][habSize][habSize];
-    this.newHabitat = new boolean[habSize][habSize][habSize];
+    this.habitat = new int[habSize][habSize][habSize];
+    this.newHabitat = new int[habSize][habSize][habSize];
     this.dimSize = habSize;
     this.coordList = coordGenerate(habSize);
     this.population = 0;
     this.generation = 0;
-    this.cellCount = new int[habSize][habSize][habSize];
-    this.maxCount = 0;
+    
+    this.numThreads = 6;
+    this.threads = generateThreads();
+    this.threadPool = Executors.newFixedThreadPool(this.numThreads);
   } // end constructor
   
   
@@ -86,20 +95,6 @@ public static class Environment {
   } // end isCoord
   
   
-  private boolean toroidal(boolean[][][] habitatTor, int x, int y, int z) {
-    /*
-      calculates the passed coordinate mod the environment size (for toroidal environment property).
-      necessary because processing handles negative mod strangely.
-    */
-    //if the array indices called are out of bounds by integer > 0, return their toroidal counterparts
-    int xTrans = (x < 0) ? (habitatTor.length + x) : ( (x >= habitatTor.length)?(x - habitatTor.length):x );
-    int yTrans = (y < 0) ? (habitatTor.length + y) : ( (y >= habitatTor.length)?(y - habitatTor.length):y );
-    int zTrans = (z < 0) ? (habitatTor.length + z) : ( (z >= habitatTor.length)?(z - habitatTor.length):z );
-  
-    return habitatTor[xTrans][yTrans][zTrans];
-  }
-  
-  
   private int[][] coordGenerate(int habSize)
   {
     /*
@@ -135,6 +130,23 @@ public static class Environment {
     return coordinate;
   } // end coordGenerate
   
+  private List<PartialEnvironmentIterator> generateThreads()
+  {
+    ArrayList<PartialEnvironmentIterator> threads = new ArrayList<PartialEnvironmentIterator>();
+    int coordsPerThread = this.coordList.length / this.numThreads;
+    int threadMinIndex = 0;
+    for (int thread = 0; thread < this.numThreads - 1; thread++) {
+      int threadMaxIndex = threadMinIndex + coordsPerThread;
+      threads.add(new PartialEnvironmentIterator(threadMinIndex, threadMaxIndex, this.coordList, this.habitat, this.newHabitat));
+      
+      threadMinIndex = threadMaxIndex;
+      threadMaxIndex += coordsPerThread;
+    }
+    threads.add(new PartialEnvironmentIterator(threadMinIndex, this.coordList.length, this.coordList, this.habitat, this.newHabitat));
+    
+    return threads;
+  }
+  
   
   public void iterate()
   {
@@ -142,118 +154,147 @@ public static class Environment {
       computes and returns the next environment based on the current one.
       modifies the following class variables:
         population
-        maxCount
-        cellCount
         newHabitat
         habitat
     */
     
     this.population = 0;
-  
-    for (int i = 0 ; i < coordList.length ; i++) {
-  
-      int x = coordList[i][0];
-      int y = coordList[i][1];
-      int z = coordList[i][2];
-      
-      this.newHabitat[x][y][z] = false;
-      
-      int count[] = new int[12];
-  
-      if (x%2 == 1) {
-  
-        count[0] = toroidal(this.habitat, x, y+2, z+2)?1:0;
-        count[1] = toroidal(this.habitat, x, y+2, z-2)?1:0;
-        count[2] = toroidal(this.habitat, x, y-2, z+2)?1:0;
-        count[3] = toroidal(this.habitat, x, y-2, z-2)?1:0;
-  
-        count[4] = toroidal(this.habitat, x+1, y, z+1)?1:0;
-        count[5] = toroidal(this.habitat, x+1, y, z-1)?1:0;
-        count[6] = toroidal(this.habitat, x+1, y+1, z)?1:0;
-        count[7] = toroidal(this.habitat, x+1, y-1, z)?1:0;
-  
-        count[8] = toroidal(this.habitat, x-1, y, z+1)?1:0;
-        count[9] = toroidal(this.habitat, x-1, y, z-1)?1:0;
-        count[10] = toroidal(this.habitat, x-1, y+1, z)?1:0;
-        count[11] = toroidal(this.habitat, x-1, y-1, z)?1:0;
-      } 
-      else {
-        if (y%2 == 1) {
-  
-          count[0] = toroidal(this.habitat, x+2, y, z+2)?1:0;
-          count[1] = toroidal(this.habitat, x+2, y, z-2)?1:0;
-          count[2] = toroidal(this.habitat, x-2, y, z+2)?1:0;
-          count[3] = toroidal(this.habitat, x-2, y, z-2)?1:0;
-  
-          count[4] = toroidal(this.habitat, x, y+1, z+1)?1:0;
-          count[5] = toroidal(this.habitat, x, y+1, z-1)?1:0;
-          count[6] = toroidal(this.habitat, x+1, y+1, z)?1:0;
-          count[7] = toroidal(this.habitat, x-1, y+1, z)?1:0;
-  
-          count[8] = toroidal(this.habitat, x, y-1, z+1)?1:0;
-          count[9] = toroidal(this.habitat, x, y-1, z-1)?1:0;
-          count[10] = toroidal(this.habitat, x+1, y-1, z)?1:0;
-          count[11] = toroidal(this.habitat, x-1, y-1, z)?1:0;
-        } 
-        else {
-          if (z%2 == 1) {
-  
-            count[0] = toroidal(this.habitat, x+2, y+2, z)?1:0;
-            count[1] = toroidal(this.habitat, x-2, y+2, z)?1:0;
-            count[2] = toroidal(this.habitat, x+2, y-2, z)?1:0;
-            count[3] = toroidal(this.habitat, x-2, y-2, z)?1:0;
-  
-            count[4] = toroidal(this.habitat, x+1, y, z+1)?1:0;
-            count[5] = toroidal(this.habitat, x-1, y, z+1)?1:0;
-            count[6] = toroidal(this.habitat, x, y+1, z+1)?1:0;
-            count[7] = toroidal(this.habitat, x, y-1, z+1)?1:0;
-  
-            count[8] = toroidal(this.habitat, x+1, y, z-1)?1:0;
-            count[9] = toroidal(this.habitat, x-1, y, z-1)?1:0;
-            count[10] = toroidal(this.habitat, x, y+1, z-1)?1:0;
-            count[11] = toroidal(this.habitat, x, y-1, z-1)?1:0;
-          }
-        }
+    
+    try {
+      List<Future<Integer>> futurePopulationAdds = this.threadPool.invokeAll(this.threads);
+      for (Future<Integer> futurePopulationAdd : futurePopulationAdds) {
+          this.population += futurePopulationAdd.get();
       }
-  
-      int totalCount = 0;
-      for (int s = 0 ; s < 12 ; s++) {
-        totalCount += count[s];
-      }
-  
-      if ((totalCount == 4 | totalCount == 5) & !this.habitat[x][y][z]) {
-  
-        this.newHabitat[x][y][z] = true;
-        
-        this.population++;
-        
-        this.cellCount[x][y][z]++;
-        this.maxCount = max(this.maxCount, this.cellCount[x][y][z]);
-      } 
-      else {
-        if ( (totalCount == 3 | totalCount == 4 | totalCount == 5) & this.habitat[x][y][z]) {
-  
-          this.newHabitat[x][y][z] = true;
-          
-          this.population++;
-          
-          this.cellCount[x][y][z]++;
-          this.maxCount = max(this.maxCount, this.cellCount[x][y][z]);
-        } 
-      }
+    } catch (ExecutionException e) {
+      println("OH SHIT");
+      println("OH SHIT");
+      println("OH SHIT");
+    } catch (InterruptedException e) {
+      println("OH SHIZ");
+      println("OH SHIZ");
+      println("OH SHIZ");
+    }
+    
+    for (PartialEnvironmentIterator iterator : threads) {
+      iterator.swapHabitats();
     }
     
     this.generation++;
     
-    for (int i = 0 ; i < coordList.length ; i++) {
-      int x = coordList[i][0];
-      int y = coordList[i][1];
-      int z = coordList[i][2];
-      this.habitat[x][y][z] = this.newHabitat[x][y][z];
-    }
+    int[][][] tmp = this.habitat;
+    this.habitat = newHabitat;
+    this.newHabitat = tmp;
   }  //  end iterate
   
+  class PartialEnvironmentIterator implements java.util.concurrent.Callable<Integer> {
+    private int minCoordIndex;
+    private int maxCoordIndex;
+    private int[][] coordList;
+    private int[][][] habitat; 
+    private int[][][] newHabitat;
+    
+    PartialEnvironmentIterator(int minCoordIndex, int maxCoordIndex, int[][] coordList, int[][][] habitat, int[][][] newHabitat) {
+      this.minCoordIndex = minCoordIndex;
+      this.maxCoordIndex = maxCoordIndex;
+      this.coordList = coordList;
+      this.habitat = habitat;
+      this.newHabitat = newHabitat;
+    }
+    
+    public void swapHabitats() {  
+      int[][][] tmp = this.habitat;
+      this.habitat = newHabitat;
+      this.newHabitat = tmp;
+    }
+    
+    public Integer call() {
+      int addedPopulation = 0;
+      
+      for (int i = this.minCoordIndex ; i < maxCoordIndex ; i++) {
+    
+        int x = this.coordList[i][0];
+        int y = this.coordList[i][1];
+        int z = this.coordList[i][2];
+        
+        int totalCount = 0;
+    
+        if (x%2 == 1) {
+          totalCount += toroidal(this.habitat, x, y+2, z+2);
+          totalCount += toroidal(this.habitat, x, y+2, z-2);
+          totalCount += toroidal(this.habitat, x, y-2, z+2);
+          totalCount += toroidal(this.habitat, x, y-2, z-2);
+    
+          totalCount += toroidal(this.habitat, x+1, y, z+1);
+          totalCount += toroidal(this.habitat, x+1, y, z-1);
+          totalCount += toroidal(this.habitat, x+1, y+1, z);
+          totalCount += toroidal(this.habitat, x+1, y-1, z);
+    
+          totalCount += toroidal(this.habitat, x-1, y, z+1);
+          totalCount += toroidal(this.habitat, x-1, y, z-1);
+          totalCount += toroidal(this.habitat, x-1, y+1, z);
+          totalCount += toroidal(this.habitat, x-1, y-1, z);
+        } 
+        else if (y%2 == 1) {
+          totalCount += toroidal(this.habitat, x+2, y, z+2);
+          totalCount += toroidal(this.habitat, x+2, y, z-2);
+          totalCount += toroidal(this.habitat, x-2, y, z+2);
+          totalCount += toroidal(this.habitat, x-2, y, z-2);
   
+          totalCount += toroidal(this.habitat, x, y+1, z+1);
+          totalCount += toroidal(this.habitat, x, y+1, z-1);
+          totalCount += toroidal(this.habitat, x+1, y+1, z);
+          totalCount += toroidal(this.habitat, x-1, y+1, z);
   
+          totalCount += toroidal(this.habitat, x, y-1, z+1);
+          totalCount += toroidal(this.habitat, x, y-1, z-1);
+          totalCount += toroidal(this.habitat, x+1, y-1, z);
+          totalCount += toroidal(this.habitat, x-1, y-1, z);
+        }
+        else if (z%2 == 1) {
+          totalCount += toroidal(this.habitat, x+2, y+2, z);
+          totalCount += toroidal(this.habitat, x-2, y+2, z);
+          totalCount += toroidal(this.habitat, x+2, y-2, z);
+          totalCount += toroidal(this.habitat, x-2, y-2, z);
+  
+          totalCount += toroidal(this.habitat, x+1, y, z+1);
+          totalCount += toroidal(this.habitat, x-1, y, z+1);
+          totalCount += toroidal(this.habitat, x, y+1, z+1);
+          totalCount += toroidal(this.habitat, x, y-1, z+1);
+  
+          totalCount += toroidal(this.habitat, x+1, y, z-1);
+          totalCount += toroidal(this.habitat, x-1, y, z-1);
+          totalCount += toroidal(this.habitat, x, y+1, z-1);
+          totalCount += toroidal(this.habitat, x, y-1, z-1);
+        }
+    
+        if ((totalCount == 4 || totalCount == 5) && this.habitat[x][y][z] == 0) {
+          this.newHabitat[x][y][z] = 1;
+          addedPopulation++;
+        } 
+        else if ((totalCount == 3 || totalCount == 4 || totalCount == 5) && this.habitat[x][y][z] == 1) {
+          this.newHabitat[x][y][z] = 1;
+          addedPopulation++;
+        }
+        else {
+          this.newHabitat[x][y][z] = 0;
+        }
+      }
+      
+      return addedPopulation;
+    }
+
+    private int toroidal(int[][][] habitatTor, int x, int y, int z) {
+      /*
+        calculates the passed coordinate mod the environment size (for toroidal environment property).
+        necessary because processing handles negative mod strangely.
+      */
+      //if the array indices called are out of bounds by integer > 0, return their toroidal counterparts
+      int xTrans = (x < 0) ? (habitatTor.length + x) : ( (x >= habitatTor.length)?(x - habitatTor.length):x );
+      int yTrans = (y < 0) ? (habitatTor.length + y) : ( (y >= habitatTor.length)?(y - habitatTor.length):y );
+      int zTrans = (z < 0) ? (habitatTor.length + z) : ( (z >= habitatTor.length)?(z - habitatTor.length):z );
+    
+      return habitatTor[xTrans][yTrans][zTrans];
+    }
+  }
   
 }

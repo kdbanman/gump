@@ -1,5 +1,10 @@
+
+import peasy.*;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
 PrintWriter output;
-import processing.opengl.*;
 
 /************
   GENERATION ZERO PARAMETERS
@@ -47,7 +52,11 @@ ConstructionCamera constrCam;
 // Number of frames to render between environmental iterations (need to have frameCounter for this to work)
 // This is modified by division/multiplication by 2 to avoid negative values (WHY NO UNSIGNED INT, JAVA??) 
 int framesPerIter = 64;
+int stepsPerIter = 1;
 int frameCounter = 0;
+
+long lastDebugMillis = 0;
+int lastDebugGeneration = 0;
 
 /***********
   CAMERA FROM MRFEINBERG.COM
@@ -59,17 +68,20 @@ void setup() {
   /*
     Processing's  initialization function
   */
-  output = createWriter("../statData/population" + String.valueOf((int)(habitatSize * seedFraction)) + ".txt");
+  String datetime = new SimpleDateFormat("yyyy-MM-dd-HH-mm").format(new Timestamp(System.currentTimeMillis()));
+  String filename = "../statData/population_" + datetime + ".csv";
+  output = createWriter(filename);
 
   environment = new Environment(habitatSize);
   environment.habitat = generate(environment.habitat, seedFraction, seedProbability, generateMode);
   
-  size(1080, 720, OPENGL);
+  size(1080, 720, P3D);
   
   hint(DISABLE_DEPTH_TEST);
   
   this.cam = new PeasyCam(this, 0);
   constrCam = new ConstructionCamera(environment, seedFraction, cam, width, height);
+  
 }
 
 
@@ -130,11 +142,20 @@ void keyPressed()
     if (key == CODED) {
       
       if (keyCode == UP) {
-        framesPerIter = max(1, framesPerIter / 2);
+        if (framesPerIter == 1) {
+          stepsPerIter *= 2;
+        }
         
+        framesPerIter = max(1, framesPerIter / 2);
       } else if (keyCode == DOWN) {
-        framesPerIter *= 2;
+        if (stepsPerIter == 1) {
+          framesPerIter *= 2;
+        }
+        
+        stepsPerIter = max(1, stepsPerIter / 2);
       }
+      
+      println("Speed: " + float(stepsPerIter) / float(framesPerIter));
     } else if (key == '-') {
       this.cam.setDistance(this.cam.getDistance() + 30);
     } else if (key == '=') {
@@ -162,12 +183,11 @@ void draw() {
     render(environment);
     
     if (frameCounter % framesPerIter == 0) {
-      String[] datapoint = new String[2];
-      datapoint[0] = str(environment.generation);
-      datapoint[1] = str(environment.population);
-      output.println( join(datapoint, "     ") );
       
-      environment.iterate();
+      for (int step = 0; step < stepsPerIter; step++) {
+        environment.iterate();
+        output.println(str(environment.generation) + "," + str(environment.population));
+      }
     }
     frameCounter++;
     
@@ -180,7 +200,12 @@ void draw() {
   key = '~';
   keyPressed();
   
+  long frameMillis = System.currentTimeMillis();
+  int elapsed = (int)(frameMillis - lastDebugMillis);
+  if (elapsed > 1000) {
+    int generationsCompleted = environment.generation - lastDebugGeneration;
+    println("Generations per second: " + (float(generationsCompleted) / float(elapsed) * 1000));
+    lastDebugGeneration = environment.generation;
+    lastDebugMillis = frameMillis;
+  }
 }
-
-
-

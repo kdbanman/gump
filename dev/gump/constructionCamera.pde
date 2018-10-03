@@ -143,7 +143,7 @@ public static class ConstructionCamera {
         zCoord += clickX;
       }
 
-      this.environ.habitat[xCoord][yCoord][zCoord] = !this.environ.habitat[xCoord][yCoord][zCoord];
+      this.environ.habitat[xCoord][yCoord][zCoord] = this.environ.habitat[xCoord][yCoord][zCoord] == 1 ? 0 : 1;
     }
   }
 
@@ -154,7 +154,7 @@ public static class ConstructionCamera {
       for (int y = this.minPlane; y <= maxPlane; y++) {
         for (int z = this.minPlane; z <= maxPlane; z++) {
           if (x%2 + y%2 + z%2 == 1) {
-            this.environ.habitat[x][y][z] = false;
+            this.environ.habitat[x][y][z] = 0;
           }
         }
       }
@@ -167,11 +167,10 @@ public static class ConstructionCamera {
       for (int y = seedStart ; y <= seedEnd ; y++) {
         for (int z = seedStart ; z <= seedEnd ; z++) {
           if (x%2 + y%2 + z%2 == 1) {
-            this.environ.habitat[x][y][z] = true;
+            this.environ.habitat[x][y][z] = 1;
           }
         }
       }
     }
   }
 }
-

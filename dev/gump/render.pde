@@ -17,7 +17,7 @@ void renderTrans(Environment env, int planeSet, int plane) {
       int y = env.coordList[i][1];
       int z = env.coordList[i][2];
   
-      if (env.habitat[x][y][z]) {
+      if (env.habitat[x][y][z] == 1) {
         axialPaint(x, y, z);
       }
     }
@@ -36,7 +36,7 @@ void renderTrans(Environment env, int planeSet, int plane) {
       boolean inFocus = false;
   
       // nested if blocks here for clarity of intent.  hopefully this isn't counterproductive...
-      if (env.habitat[x][y][z]) {
+      if (env.habitat[x][y][z] == 1) {
         if (planeSet == cellPlaneSet) {
           if (planeSet == 2 && x == plane 
            || planeSet == 1 && y == plane

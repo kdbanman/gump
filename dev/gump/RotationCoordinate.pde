@@ -1,3 +1,5 @@
+import peasy.org.apache.commons.math.geometry.*;
+
 public static class RotationCoordinate {
   private Rotation zeroRot;
   private Rotation oneRot;

@@ -1,4 +1,4 @@
-int getSeedStart(boolean[][][] habitatGen, float fraction) {
+int getSeedStart(int[][][] habitatGen, float fraction) {
   float seedLength = habitatGen.length * fraction;
   
   int seedStart = round( habitatGen.length / 2 - seedLength / 2 );
