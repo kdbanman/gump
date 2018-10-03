@@ -202,9 +202,11 @@ void draw() {
   
   long frameMillis = System.currentTimeMillis();
   int elapsed = (int)(frameMillis - lastDebugMillis);
-  if (elapsed > 1000) {
+  if (elapsed > 10000) {
     int generationsCompleted = environment.generation - lastDebugGeneration;
     println("Generations per second: " + (float(generationsCompleted) / float(elapsed) * 1000));
+    output.flush();
+    
     lastDebugGeneration = environment.generation;
     lastDebugMillis = frameMillis;
   }

@@ -52,7 +52,7 @@ public static class Environment {
     this.population = 0;
     this.generation = 0;
     
-    this.numThreads = 6;
+    this.numThreads = 16;
     this.threads = generateThreads();
     this.threadPool = Executors.newFixedThreadPool(this.numThreads);
   } // end constructor
