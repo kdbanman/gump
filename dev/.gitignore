@@ -1,2 +1,4 @@
 # ignore the temporary population data storage folder
-statData/*
+statData/*.csv
+statData/*.txt
+statData/*.dat
